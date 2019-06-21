@@ -17,9 +17,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/p/{post}', 'PostsController@show');
+Route::post('follow/{user}', function () { // example, now controller...stopped @ 3h 28min
+    return['success'];
+});
+
 Route::get('/p/create', 'PostsController@create');
 Route::post('/p', 'PostsController@store');
+Route::get('/p/{post}', 'PostsController@show'); // routes with variables like {post} should be last, if it dont match first two then it will match with this one more dynamic
 
 Route::get('/profile/{user}', 'ProfilesController@index')->name('profile.show');
 Route::get('/profile/{user}/edit', 'ProfilesController@edit')->name('profile.edit');

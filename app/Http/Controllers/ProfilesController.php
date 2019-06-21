@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image; // for profile image
 
 class ProfilesController extends Controller
 {
@@ -38,7 +39,25 @@ class ProfilesController extends Controller
         // dd($data);
         // $user->profile->update($data); // bad practice, everyone, even guest can edit any user profile
 
-        auth()->user()->profile->update($data); // extra layer of protection, only grab the authenticated user, doesnt matter what they giving throught the query (url)
+
+        if (request('image')){
+            $imagePath = (request('image')->store('profile', 'public'));
+
+            $image = Image::make(public_path("storage/{$imagePath}"))->fit(1000, 1000);
+            $image->save();
+
+            $imageArray = ['image' => $imagePath]; // updating / not updating profile picture
+        }
+
+        // dd(array_merge(
+        //     $data,
+        //     ['image' => $imagePath]
+        // ));
+
+        auth()->user()->profile->update(array_merge(
+            $data,
+            $imageArray ?? [] // if not set in request, imagearray will be empty, when we edit profile we can edit without uploading new picture
+        )); // extra layer of protection, only grab the authenticated user, doesnt matter what they giving throught the query (url)
 
         return redirect("/profile/{$user->id}");
     }
