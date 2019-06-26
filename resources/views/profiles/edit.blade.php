@@ -39,7 +39,7 @@
                             value="{{ old('description') ?? $user->profile->description }}"
                             autocomplete="description" autofocus>
 
-                    @error('title')
+                    @error('description')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

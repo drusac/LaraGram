@@ -64,7 +64,6 @@ class ProfilesController extends Controller
         // dd($data);
         // $user->profile->update($data); // bad practice, everyone, even guest can edit any user profile
 
-
         if (request('image')){
             $imagePath = (request('image')->store('profile', 'public'));
 
