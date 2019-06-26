@@ -1,4 +1,5 @@
 <?php
+use App\Mail\NewUserWelcomeMail;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,16 +12,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/email', function() {
+    return new NewUserWelcomeMail();
 });
 
 Auth::routes();
 
-Route::post('follow/{user}', function () { // example, now controller...stopped @ 3h 28min
-    return['success'];
-});
+Route::post('follow/{user}', 'FollowsController@store');
 
+Route::get('/', 'PostsController@index');
 Route::get('/p/create', 'PostsController@create');
 Route::post('/p', 'PostsController@store');
 Route::get('/p/{post}', 'PostsController@show'); // routes with variables like {post} should be last, if it dont match first two then it will match with this one more dynamic

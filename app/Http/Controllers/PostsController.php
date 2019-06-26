@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image; // for image resizing
 
@@ -10,6 +11,20 @@ class PostsController extends Controller
     public function __construct(){
         $this->middleware('auth'); // if this line/method exists in __constructor every single route here will require authorization
         // route is now protected with must be logged in
+    }
+
+    public function index(){
+        $users = auth()->user()->following()->pluck('profiles.user_id');
+
+        // $posts = Post::whereIn('user_id', $users)->orderBy('created_at', 'DESC')->get();
+        // $posts = Post::whereIn('user_id', $users)->latest()->get(); // same as line above but shorter
+        // $posts = Post::whereIn('user_id', $users)->latest()->paginate(5); // same as line above but for pagination
+        $posts = Post::whereIn('user_id', $users)->with('user')->latest()->paginate(5); // same as line above but for pagination and better performance // less queries
+        // with('user') is about relationship in Post model
+
+        // dd($posts);
+
+        return view('posts.index', compact('posts'));
     }
 
     public function create(){
